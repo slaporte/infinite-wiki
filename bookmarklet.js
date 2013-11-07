@@ -1,13 +1,22 @@
 
 var loading_random = false;
 
+function append_random_content() {
+  $('#content').append('<div class="more">');
+  $('#loading-msg').css('top', $(document).height()).fadeIn();
+  $('.more:last').load('./Special:Random #content > *', function() {
+    loading_random = false;
+    $('#loading-msg').fadeOut();
+  }).css('padding-top', '2em');
+}
+
 if ($('body.mediawiki').length) {
   if ($('#loading-msg').length === 0) {
     $('body').append('<p id="loading-msg">loading more wikipedia ...</p>');
   }
   $('body').append('<p id="welcome-msg">Infinite Wikipedia enabled</p>');
   if ($('#more-msg').length === 0) {
-    $('#content').next().append('<p id="more-msg" style="background: rgba(41, 128, 185, 0.8); text-align:center; color: white; font-size: 2em; margin-left: 5.5em">&darr; scroll for more &darr;</p>');
+    $('#content').next().append('<p id="more-msg" style="background: rgba(41, 128, 185, 0.8); text-align:center; color: white; font-size: 2em; margin-left: 5.5em">&darr; <a href="#" style="color:white;" onclick="append_random_content(); return false;" >scroll for more</a> &darr;</p>');
   }
   $('#loading-msg').hide();
   $('#loading-msg').css({
@@ -35,12 +44,7 @@ if ($('body.mediawiki').length) {
   $(window).scroll(function() {
     if(!loading_random && $(window).scrollTop() + $(window).height() == $(document).height()) {
       loading_random = true;
-      $('#content').append('<div class="more">');
-      $('#loading-msg').css('top', $(document).height()).fadeIn();
-      $('.more:last').load('./Special:Random #content > *', function() {
-        loading_random = false;
-        $('#loading-msg').fadeOut();
-      }).css('padding-top', '2em');
+      append_random_content();
     }
   });
 } else {
